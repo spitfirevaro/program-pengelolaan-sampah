@@ -2,6 +2,9 @@ package main
 
 import "fmt"
 
+var sortedJumlah = false
+var sortedBerat = false
+
 const NMAX int = 10
 
 type trashData struct {
@@ -19,7 +22,7 @@ func main() {
 	fmt.Println("Selamat Datang Di Aplikasi Pengolahan Data Sampah!")
 
 	for !stop {
-		Awal()
+		awal()
 		fmt.Scan(&cmd)
 		switch cmd {
 		case "1":
@@ -41,7 +44,7 @@ func main() {
 	fmt.Println("Terimakasih telah menggunkan kami!")
 }
 
-func Awal() {
+func awal() {
 	fmt.Println("Apa yang ingin anda lakukan?")
 	fmt.Println("   1. Memasukkan Data Sampah")
 	fmt.Println("   2. Memodifikasi Data Sampah")
@@ -140,12 +143,13 @@ func add(A *ArrTrash, n *int) {
 
 func view(A ArrTrash, n int) {
 	var i int
-	//fmt.Printf("%-2\n")
+	fmt.Println("+-------------------------------------------------------------------------------+")
+	fmt.Printf("|%-2s |%-25s |%-10s |%-7s |%-12s |%-12s |\n", "No", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
 	for i = 1; i <= n; i++ {
-		fmt.Println("----------------------------------------------------------")
-		fmt.Printf("%-2d |%-20s |%-10s |%-5d |%-2.1f kg |%-3s |\n", i, A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Printf("|%-2d |%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", i, A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
 	}
-	fmt.Println("----------------------------------------------------------")
+	fmt.Println("+-------------------------------------------------------------------------------+")
 }
 
 func stat(A *ArrTrash, n *int) {
@@ -173,7 +177,7 @@ func stat(A *ArrTrash, n *int) {
 	fmt.Printf("Total jumlah data yang Anorganik adalah : %d\n", ano)
 	fmt.Printf("Total jumlah data yang Organik adalah : %d\n", org)
 	fmt.Printf("Total jumlah Sampah yang terkumpul adalah : %d\n", jumJum)
-	fmt.Printf("Total jumlah Berat sampah yang terkumpul adalah : %.2f dan rata-ratanya adalah : %.2f", jumBer, ratBer)
+	fmt.Printf("Total jumlah Berat sampah yang terkumpul adalah : %.2f dan rata-ratanya adalah : %.2f\n", jumBer, ratBer)
 	fmt.Printf("Total jumlah Sampah yang terolah : %d, dan yang tidak : %d\n", daurY, daurN)
 
 }
@@ -190,117 +194,252 @@ func ChData(A *ArrTrash, n *int) {
 }
 
 func search(A *ArrTrash, n int) {
-	var search, key string
-	var keyIn, i, total int
-	var keyFlo float64
-	var ketemu bool = false
+	var search string
 	var stop bool = false
-	fmt.Print("Ingin Mensearch apa? : ")
-	fmt.Scan(&search)
 
 	for !stop {
+		fmt.Print("Ingin Mencari apa? : ")
+		fmt.Scan(&search)
 		switch search {
 		case "Nama", "nama":
-			fmt.Print("Silahkan masukkan <nama> data yang akan dicari: ")
-			fmt.Scan(&key)
-			total = 0
-			for i = 1; i <= n; i++ {
-				if key == A[i].nama {
-					fmt.Println("--------------------------------------------------------")
-					fmt.Printf("|%-20s |%-10s |%-5d |%-4.1f kg |%-3s |\n", A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
-					ketemu = true
-					total++
-				}
-			}
-			if !ketemu {
-				fmt.Println("Tidak Ketemu")
-			} else {
-				fmt.Printf("Ada %d Data yang ditemukan\n", total)
-			}
-			fmt.Println("--------------------------------------------------------")
+			searchNama(A, n)
 			stop = true
 		case "Jenis", "jenis":
-			fmt.Print("Silahkan masukkan <Jenis> data yang akan dicari: ")
-			fmt.Scan(&key)
-			total = 0
-			for i = 1; i <= n; i++ {
-				if key == A[i].jenis {
-					fmt.Println("--------------------------------------------------------")
-					fmt.Printf("|%-20s |%-10s |%-5d |%-2.1f kg |%-3s |\n", A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
-					ketemu = true
-					total++
-				}
-			}
-			if !ketemu {
-				fmt.Println("Tidak Ketemu")
-			} else {
-				fmt.Printf("Ada %d Data yang ditemukan\n", total)
-			}
-			fmt.Println("--------------------------------------------------------")
+			searchJenis(A, n)
 			stop = true
 		case "Jumlah", "jumlah":
-			fmt.Print("Silahkan masukkan <Jumlah> data yang akan dicari: ")
-			fmt.Scan(&keyIn)
-			total = 0
-			for i = 1; i <= n; i++ {
-				if keyIn == A[i].jumlah {
-					fmt.Println("--------------------------------------------------------")
-					fmt.Printf("|%-20s |%-10s |%-5d |%-2.1f kg |%-3s |\n", A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
-					ketemu = true
-					total++
-				}
-			}
-			if !ketemu {
-				fmt.Println("Tidak Ketemu")
-			} else {
-				fmt.Printf("Ada %d Data yang ditemukan\n", total)
-			}
-			fmt.Println("--------------------------------------------------------")
+			searchJumlah(A, n)
 			stop = true
 		case "Berat", "berat":
-			fmt.Print("Silahkan masukkan <nama> data yang akan dicari: ")
-			fmt.Scan(&keyIn)
-			total = 0
-			for i = 1; i <= n; i++ {
-				if keyFlo == A[i].berat {
-					fmt.Println("--------------------------------------------------------")
-					fmt.Printf("|%-20s |%-10s |%-5d |%-2.1f kg |%-3s |\n", A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
-					ketemu = true
-					total++
-				}
-			}
-			if !ketemu {
-				fmt.Println("Tidak Ketemu")
-			} else {
-				fmt.Printf("Ada %d Data yang ditemukan\n", total)
-			}
-			fmt.Println("--------------------------------------------------------")
+			searchBerat(A, n)
 			stop = true
 		case "Daur", "daur":
-			fmt.Print("Silahkan masukkan <nama> data yang akan dicari: ")
-			fmt.Scan(&key)
-			total = 0
-			for i = 1; i <= n; i++ {
-				if key == A[i].daur {
-					fmt.Println("--------------------------------------------------------")
-					fmt.Printf("|%-20s |%-10s |%-5d |%-5.1f kg |%-3s |\n", A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
-					ketemu = true
-					total++
-				}
-			}
-			if !ketemu {
-				fmt.Println("Tidak Ketemu")
-			} else {
-				fmt.Printf("Ada %d Data yang ditemukan\n", total)
-			}
-			fmt.Println("--------------------------------------------------------")
+			searchDaur(A, n)
 			stop = true
-		default:
-			fmt.Println("Error silahkan coba lagi")
 		}
-
 	}
 }
+
+func searchJumlah(A *ArrTrash, n int) {
+	const ncopy int = 10
+	type arrcopy [ncopy]trashData
+	var B arrcopy
+	var temp trashData
+	var i, keyIn, j int
+	var low, high, mid, idx int
+	var ketemu bool = false
+	var halt bool = false
+
+	fmt.Print("Silahkan masukkan <Jumlah> data yang akan dicari: ")
+	fmt.Scan(&keyIn)
+	halt = false
+	low = 1
+	high = n
+	idx = -1
+
+	for i = 1; i <= n; i++ {
+		B[i].nama = A[i].nama
+		B[i].jenis = A[i].jenis
+		B[i].jumlah = A[i].jumlah
+		B[i].berat = A[i].berat
+		B[i].daur = A[i].daur
+	}
+	if !sortedJumlah {
+		for i = 2; i <= n; i++ {
+			temp = B[i]
+			j = i - 1
+			for j >= 1 && B[j].jumlah > temp.jumlah {
+				B[j+1] = B[j]
+				j--
+			}
+			B[j+1] = temp
+		}
+	}
+
+	for low <= high && !halt {
+		mid = low + (high-low)/2
+		if B[mid].jumlah < keyIn {
+			low = mid + 1
+		} else if B[mid].jumlah > keyIn {
+			high = mid - 1
+		} else {
+			idx = mid
+			ketemu = true
+			halt = true
+		}
+	}
+
+	if !ketemu {
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Println("| Tidak Ketemu                                                              |")
+	} else {
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Printf("|%-25s |%-10s |%-7s |%-12s |%-12s |\n", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Printf("|%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", B[idx].nama, B[idx].jenis, B[idx].jumlah, B[idx].berat, B[idx].daur)
+	}
+
+	fmt.Println("+---------------------------------------------------------------------------+")
+}
+func searchBerat(A *ArrTrash, n int) {
+	const ncopy int = 10
+	type arrcopy [ncopy]trashData
+	var B arrcopy
+	var temp trashData
+	var i, j int
+	var key float64
+	var low, high, mid, idx int
+	var ketemu bool = false
+	var halt bool = false
+
+	fmt.Print("Silahkan masukkan <Berat> data yang akan dicari: ")
+	fmt.Scan(&key)
+	halt = false
+	low = 1
+	high = n
+	idx = -1
+
+	for i = 1; i <= n; i++ {
+		B[i].nama = A[i].nama
+		B[i].jenis = A[i].jenis
+		B[i].jumlah = A[i].jumlah
+		B[i].berat = A[i].berat
+		B[i].daur = A[i].daur
+	}
+	if !sortedBerat {
+		for i = 2; i <= n; i++ {
+			temp = B[i]
+			j = i - 1
+			for j >= 1 && B[j].berat > temp.berat {
+				B[j+1] = B[j]
+				j--
+			}
+			B[j+1] = temp
+		}
+	}
+
+	for low <= high && !halt {
+		mid = low + (high-low)/2
+		if B[mid].berat < key {
+			low = mid + 1
+		} else if B[mid].berat > key {
+			high = mid - 1
+		} else {
+			idx = mid
+			ketemu = true
+			halt = true
+		}
+	}
+
+	if !ketemu {
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Println("| Tidak Ketemu                                                              |")
+	} else {
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Printf("|%-25s |%-10s |%-7s |%-12s |%-12s |\n", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
+		fmt.Println("+---------------------------------------------------------------------------+")
+		fmt.Printf("|%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", B[idx].nama, B[idx].jenis, B[idx].jumlah, B[idx].berat, B[idx].daur)
+	}
+
+	fmt.Println("+---------------------------------------------------------------------------+")
+}
+
+func searchDaur(A *ArrTrash, n int) {
+	var key string
+	var total, i, first int
+	var ketemu bool = false
+	fmt.Print("Silahkan masukkan <Daur (Yes/No)> data yang akan dicari: ")
+	fmt.Scan(&key)
+	total = 0
+	first = 0
+	for i = 1; i <= n; i++ {
+		if key == A[i].daur {
+			if first == 0 {
+				fmt.Println("+-------------------------------------------------------------------------------+")
+				fmt.Printf("|%-2s |%-25s |%-10s |%-7s |%-12s |%-12s |\n", "No", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
+				first++
+			}
+			fmt.Println("+-------------------------------------------------------------------------------+")
+			fmt.Printf("|%-2d |%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", i, A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
+			ketemu = true
+			total++
+		}
+	}
+	if !ketemu {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Println("| Tidak Ketemu                                                                  |")
+	} else {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Printf("| Ada %d Data yang ditemukan                                                    |\n", total)
+
+	}
+	fmt.Println("+-------------------------------------------------------------------------------+")
+}
+
+func searchJenis(A *ArrTrash, n int) {
+	var key string
+	var total, i, first int
+	var ketemu bool = false
+	fmt.Print("Silahkan masukkan <Jenis> data yang akan dicari: ")
+	fmt.Scan(&key)
+	total = 0
+	first = 0
+	for i = 1; i <= n; i++ {
+		if key == A[i].jenis {
+			if first == 0 {
+				fmt.Println("+-------------------------------------------------------------------------------+")
+				fmt.Printf("|%-2s |%-25s |%-10s |%-7s |%-12s |%-12s |\n", "No", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
+				first++
+			}
+			fmt.Println("+-------------------------------------------------------------------------------+")
+			fmt.Printf("|%-2d |%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", i, A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
+			ketemu = true
+			total++
+		}
+	}
+	if !ketemu {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Println("| Tidak Ketemu                                                                  |")
+	} else {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Printf("| Ada %d Data yang ditemukan                                                     |\n", total)
+
+	}
+	fmt.Println("+-------------------------------------------------------------------------------+")
+}
+
+func searchNama(A *ArrTrash, n int) {
+	var key string
+	var total, i, first int
+	var ketemu bool = false
+	fmt.Print("Silahkan masukkan <nama> data yang akan dicari: ")
+	fmt.Scan(&key)
+	total = 0
+	first = 0
+	for i = 1; i <= n; i++ {
+		if key == A[i].nama {
+			if first == 0 {
+				fmt.Println("+-------------------------------------------------------------------------------+")
+				fmt.Printf("|%-2s |%-25s |%-10s |%-7s |%-12s |%-12s |\n", "No", "Nama", "Jenis", "Jumlah", "Berat (kg)", "Daur (Y/N)")
+				first++
+			}
+			fmt.Println("+-------------------------------------------------------------------------------+")
+			fmt.Printf("|%-2d |%-25s |%-10s |%-7d |%-10.1f kg|%-12s |\n", i, A[i].nama, A[i].jenis, A[i].jumlah, A[i].berat, A[i].daur)
+			ketemu = true
+			total++
+		}
+	}
+	if !ketemu {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Println("| Tidak Ketemu                                                                  |")
+	} else {
+		fmt.Println("+-------------------------------------------------------------------------------+")
+		fmt.Printf("| Ada %d Data yang ditemukan                                                     |\n", total)
+
+	}
+	fmt.Println("+-------------------------------------------------------------------------------+")
+}
+
 func menuSort() {
 	fmt.Println("============================================")
 	fmt.Println("           MENU SORTIR DATA SAMPAH          ")
@@ -362,7 +501,6 @@ func sortBerat(A *ArrTrash, n int, urutan string) {
 	for i = 2; i <= n; i++ {
 		temp = A[i]
 		j = i - 1
-
 		if urutan == "asc" {
 			for j >= 1 && A[j].berat > temp.berat {
 				A[j+1] = A[j]
@@ -374,9 +512,9 @@ func sortBerat(A *ArrTrash, n int, urutan string) {
 				j--
 			}
 		}
-
 		A[j+1] = temp
 	}
+	sortedBerat = true
 }
 
 func sortJenis(A *ArrTrash, n int, urutan string) {
@@ -393,6 +531,8 @@ func sortJenis(A *ArrTrash, n int, urutan string) {
 		A[i] = A[idx]
 		A[idx] = temp
 	}
+	sortedBerat = false
+	sortedJumlah = false
 }
 
 func sortJumlah(A *ArrTrash, n int, urutan string) {
@@ -416,6 +556,7 @@ func sortJumlah(A *ArrTrash, n int, urutan string) {
 		}
 		A[j+1] = temp
 	}
+	sortedJumlah = true
 }
 
 func sortDaur(A *ArrTrash, n int, urutan string) {
@@ -432,4 +573,6 @@ func sortDaur(A *ArrTrash, n int, urutan string) {
 		A[i] = A[idx]
 		A[idx] = temp
 	}
+	sortedJumlah = false
+	sortedBerat = false
 }
